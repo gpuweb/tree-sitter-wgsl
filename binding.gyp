@@ -2,18 +2,29 @@
   "targets": [
     {
       "target_name": "tree_sitter_wgsl_binding",
+      "dependencies": [
+        "<!(node -p \"require('node-addon-api').targets\"):node_addon_api_except",
+      ],
       "include_dirs": [
-        "<!(node -e \"require('nan')\")",
-        "src"
+        "src",
       ],
       "sources": [
         "bindings/node/binding.cc",
-        "src/parser.c",
-        # If your language uses an external scanner, add it here.
+        "src/parser.cpp",
+        "src/scanner.cpp",
       ],
-      "cflags_c": [
-        "-std=c99",
-      ]
+      "conditions": [
+        ["OS!='win'", {
+          "cflags_cc": [
+            "-std=c++17",
+          ],
+        }, { # OS == "win"
+          "cflags_cc": [
+            "/std:c++17",
+            "/utf-8",
+          ],
+        }],
+      ],
     }
   ]
 }
