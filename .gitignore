@@ -23,6 +23,7 @@ dist/
 *.whl
 
 # C artifacts
+*.dSYM/
 *.a
 *.so
 *.so.*

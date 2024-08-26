@@ -47,6 +47,9 @@
   "tree-sitter": [
     {
       "scope": "source.wgsl",
+      "filetypes": [
+        "wgsl"
+      ],
       "injection-regex": "^wgsl$"
     }
   ]
