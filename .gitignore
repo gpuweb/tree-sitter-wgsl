@@ -16,6 +16,7 @@ go.sum
 _obj/
 
 # Python artifacts
+__pycache__/
 .venv/
 dist/
 *.egg-info
