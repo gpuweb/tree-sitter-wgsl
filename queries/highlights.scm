@@ -4,22 +4,24 @@
 
 ; Functions
 (function_decl
-  name: (ident) @function)
+  (function_header
+    (ident) @function))
 (call_expression
-  function: (template_elaborated_ident) @function)
+  (call_phrase
+    (template_elaborated_ident) @function))
 
 ; Variables and parameters
 (param
-  name: (ident) @variable.parameter)
+  (ident) @variable.parameter)
 (variable_decl
-  name: (optionally_typed_ident (ident) @variable))
+  (optionally_typed_ident (ident) @variable))
 (const_assert_statement) @variable
 
 ; Struct and struct members
 (struct_decl
-  name: (ident) @type)
+  (ident) @type)
 (struct_member
-  name: (member_ident) @property)
+  (member_ident) @property)
 
 ; Attributes
 (attribute) @attribute
@@ -29,13 +31,11 @@
 (int_literal) @number
 (float_literal) @float
 
-; Comments
-(_comment) @comment
-
 ; Keywords and storage classes
 (global_variable_decl
   (variable_decl
-    (ident_pattern_token) @keyword.storage))
+    (optionally_typed_ident
+      (ident) @variable)))
 
 ; Control flow
 "if" @keyword.control
@@ -47,7 +47,6 @@
 "case" @keyword.control
 "default" @keyword.control
 "break" @keyword.control
-"continue" @keyword.control
 "return" @keyword.control
 "discard" @keyword.control
 
@@ -55,18 +54,6 @@
 (global_variable_decl) @keyword
 (global_value_decl) @keyword
 (variable_decl) @keyword
-
-; Expressions
-(unary_expression
-  operator: _ @operator)
-(multiplicative_expression
-  operator: _ @operator)
-(additive_expression
-  operator: _ @operator)
-(relational_expression
-  operator: _ @operator)
-(assignment_statement
-  operator: _ @operator.assignment)
 
 ; Punctuation
 "(" @punctuation.bracket
