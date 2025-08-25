@@ -31,6 +31,13 @@ dist/
 *.dylib
 *.dll
 *.pc
+*.exp
+*.lib
+
+# Zig artifacts
+.zig-cache/
+zig-cache/
+zig-out/
 
 # Example dirs
 /examples/*/
@@ -39,3 +46,7 @@ dist/
 *.wasm
 *.obj
 *.o
+
+# Archives
+*.tar.gz
+*.zip
