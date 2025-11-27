@@ -116,6 +116,8 @@
   ; (less_than_equal)
   ; (greater_than)
   ; (greater_than_equal)
+  ; (shift_left)
+  ; (shift_right)
   (compound_assignment_operator)
 ] @operator
 
