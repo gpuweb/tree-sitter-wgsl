@@ -15,7 +15,7 @@
   (ident) @variable.parameter)
 (variable_decl
   (optionally_typed_ident (ident) @variable))
-(const_assert_statement) @variable
+(assert_statement) @variable
 
 ; Struct and struct members
 (struct_decl
