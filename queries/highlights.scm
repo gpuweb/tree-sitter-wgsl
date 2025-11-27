@@ -7,9 +7,9 @@
 
 (float_literal) @number
 
-; (line_comment) @comment
-;
-; (block_comment) @comment
+(line_comment) @comment
+
+(block_comment) @comment
 
 (type_specifier) @type
 
@@ -31,6 +31,8 @@
 
 (member_ident) @property
 
+(component_or_swizzle_specifier) @property
+
 (function_header
   (ident) @function)
 
@@ -48,8 +50,6 @@
       (ident) @function.call)))
 
 (attribute) @attribute
-
-(component_or_swizzle_specifier) @property
 
 [
   "alias"
@@ -93,32 +93,18 @@
   "/"
   "%"
   "="
-  "=="
-  "!="
   "&&"
   "||"
   "&"
   "|"
   "^"
   "~"
-  "+="
-  "-="
-  "*="
-  "/="
-  "%="
-  "&="
-  "|="
-  "^="
   "++"
   "--"
   "!"
-  ; (less_than)
-  ; (less_than_equal)
-  ; (greater_than)
-  ; (greater_than_equal)
-  ; (shift_left)
-  ; (shift_right)
   (compound_assignment_operator)
+  (comparison_operator)
+  (shift_operator)
 ] @operator
 
 [
@@ -136,8 +122,8 @@
   "]"
   "{"
   "}"
-  ; (template_args_start)
-  ; (template_args_end)
+  (template_args_start)
+  (template_args_end)
 ] @punctuation.bracket
 
 ((ident) @storageclass
