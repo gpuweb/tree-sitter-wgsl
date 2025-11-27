@@ -1,78 +1,145 @@
-; Types
+((ident) @variable
+  (#set! priority 99))
+
+(bool_literal) @boolean
+
+(int_literal) @number
+
+(float_literal) @number
+
+; (line_comment) @comment
+;
+; (block_comment) @comment
+
 (type_specifier) @type
-(template_elaborated_ident) @type
 
-; Functions
-(function_decl
-  (function_header
-    (ident) @function))
-(call_expression
-  (call_phrase
-    (template_elaborated_ident) @function))
-
-; Variables and parameters
-(param
-  (ident) @variable.parameter)
-(variable_decl
-  (optionally_typed_ident (ident) @variable))
-(assert_statement) @variable
-
-; Struct and struct members
 (struct_decl
   (ident) @type)
-(struct_member
-  (member_ident) @property)
 
-; Attributes
+(type_alias_decl
+  (ident) @type)
+
+(template_arg_expression) @type
+
+(enable_extension_name) @module
+
+(language_extension_name) @module
+
+(severity_control_name) @constant
+
+(diagnostic_rule_name) @module
+
+(member_ident) @property
+
+(function_header
+  (ident) @function)
+
+(param
+  (ident)) @parameter
+
+(call_expression
+  (call_phrase
+    (template_elaborated_ident
+      (ident) @function.call)))
+
+(func_call_statement
+  (call_phrase
+    (template_elaborated_ident
+      (ident) @function.call)))
+
 (attribute) @attribute
 
-; Literals
-(bool_literal) @constant.builtin
-(int_literal) @number
-(float_literal) @float
+(component_or_swizzle_specifier) @property
 
-; Keywords and storage classes
-(global_variable_decl
-  (variable_decl
-    (optionally_typed_ident
-      (ident) @variable)))
+[
+  "alias"
+  "const"
+  "const_assert"
+  "diagnostic"
+  "discard"
+  "enable"
+  "fn"
+  "let"
+  "override"
+  "requires"
+  "return"
+  "struct"
+  "var"
+] @keyword
 
-; Control flow
-"if" @keyword.control
-"else" @keyword.control
-"loop" @keyword.control
-"for" @keyword.control
-"while" @keyword.control
-"switch" @keyword.control
-"case" @keyword.control
-"default" @keyword.control
-"break" @keyword.control
-"return" @keyword.control
-"discard" @keyword.control
+; Loop constructs
+[
+  "loop"
+  "for"
+  "while"
+  "continuing"
+  (break_statement)
+  (continue_statement)
+] @repeat
 
-; Declarations
-(global_variable_decl) @keyword
-(global_value_decl) @keyword
-(variable_decl) @keyword
+; Conditionals
+[
+  "if"
+  "else"
+  "switch"
+  "case"
+  "default"
+] @conditional
 
-; Punctuation
-"(" @punctuation.bracket
-")" @punctuation.bracket
-"[" @punctuation.bracket
-"]" @punctuation.bracket
-"{" @punctuation.bracket
-"}" @punctuation.bracket
-"," @punctuation.delimiter
-"." @punctuation.delimiter
-":" @punctuation.delimiter
-";" @punctuation.delimiter
+[
+  "+"
+  "-"
+  "*"
+  "/"
+  "%"
+  "="
+  "=="
+  "!="
+  "&&"
+  "||"
+  "&"
+  "|"
+  "^"
+  "~"
+  "+="
+  "-="
+  "*="
+  "/="
+  "%="
+  "&="
+  "|="
+  "^="
+  "++"
+  "--"
+  "!"
+  ; (less_than)
+  ; (less_than_equal)
+  ; (greater_than)
+  ; (greater_than_equal)
+  (compound_assignment_operator)
+] @operator
 
-; Builtin functions and types
-(builtin_value_name) @function.builtin
+[
+  "."
+  ","
+  ";"
+  ":"
+  "->"
+] @punctuation.delimiter
 
-; Additional keywords
-"var" @keyword
-"let" @keyword
-"const" @keyword
-"fn" @keyword
-"struct" @keyword
+[
+  "("
+  ")"
+  "["
+  "]"
+  "{"
+  "}"
+  ; (template_args_start)
+  ; (template_args_end)
+] @punctuation.bracket
+
+((ident) @storageclass
+  (#match? @storageclass "^(function|private|workgroup|uniform|storage|handle)$"))
+
+((ident) @type.qualifier
+  (#match? @type.qualifier "^(read|write|read_write)$"))
