@@ -15,10 +15,10 @@ module.exports = grammar({
     name: 'wgsl',
 
     externals: $ => [
-        $._block_comment,
+        $.block_comment,
         $._disambiguate_template,
-        $._template_args_start,
-        $._template_args_end,
+        $.template_args_start,
+        $.template_args_end,
         $._less_than,
         $._less_than_equal,
         $._shift_left,
@@ -31,14 +31,13 @@ module.exports = grammar({
     ],
 
     extras: $ => [
-        $._comment,
-        $._block_comment,
+        $.line_comment,
+        $.block_comment,
         $._blankspace,
     ],
 
     inline: $ => [
         $.global_decl,
-        $._reserved,
     ],
 
     // WGSL has no parsing conflicts.
@@ -81,7 +80,7 @@ module.exports = grammar({
 
         diagnostic_rule_name: $ => choice($.diagnostic_name_token, seq($.diagnostic_name_token, '.', $.diagnostic_name_token)),
 
-        template_list: $ => seq($._template_args_start, $.template_arg_comma_list, $._template_args_end),
+        template_list: $ => seq($.template_args_start, $.template_arg_comma_list, $.template_args_end),
 
         template_arg_comma_list: $ => seq($.template_arg_expression, repeat(seq(',', $.template_arg_expression)), optional(',')),
 
@@ -183,9 +182,11 @@ module.exports = grammar({
 
         additive_operator: $ => choice('+', '-'),
 
-        shift_expression: $ => choice($.additive_expression, seq($.unary_expression, $._shift_left, $.unary_expression), seq($.unary_expression, $._shift_right, $.unary_expression)),
+        shift_expression: $ => choice($.additive_expression, seq($.unary_expression, $.shift_operator, $.unary_expression)),
 
-        relational_expression: $ => choice($.shift_expression, seq($.shift_expression, $._less_than, $.shift_expression), seq($.shift_expression, $._greater_than, $.shift_expression), seq($.shift_expression, $._less_than_equal, $.shift_expression), seq($.shift_expression, $._greater_than_equal, $.shift_expression), seq($.shift_expression, '==', $.shift_expression), seq($.shift_expression, '!=', $.shift_expression)),
+        shift_operator: $ => choice($._shift_left, $._shift_right),
+
+        relational_expression: $ => choice($.shift_expression, seq($.shift_expression, $.comparison_operator, $.shift_expression)),
 
         short_circuit_and_expression: $ => choice($.relational_expression, seq($.short_circuit_and_expression, '&&', $.relational_expression)),
 
@@ -206,6 +207,8 @@ module.exports = grammar({
         assignment_statement: $ => choice(seq($.lhs_expression, choice('=', $.compound_assignment_operator), $.expression), seq('_', '=', $.expression)),
 
         compound_assignment_operator: $ => choice('+=', '-=', '*=', '/=', '%=', '&=', '|=', '^=', $._shift_right_assign, $._shift_left_assign),
+
+        comparison_operator: $ => choice('==', '!=', $._less_than, $._less_than_equal, $._greater_than, $._greater_than_equal),
 
         increment_statement: $ => seq($.lhs_expression, '++'),
 
@@ -269,7 +272,7 @@ module.exports = grammar({
 
         function_decl: $ => seq(repeat($.attribute), $.function_header, $.compound_statement),
 
-        function_header: $ => seq('fn', $.ident, '(', optional($.param_list), ')', optional(seq('->', repeat($.attribute), $.template_elaborated_ident))),
+        function_header: $ => seq('fn', $.ident, '(', optional($.param_list), ')', optional(seq('->', repeat($.attribute), $.type_specifier))),
 
         param_list: $ => seq($.param, repeat(seq(',', $.param)), optional(',')),
 
@@ -295,8 +298,10 @@ module.exports = grammar({
 
         ident: $ => seq($.ident_pattern_token, $._disambiguate_template),
 
-        _comment: $ => /\/\/.*/,
+        line_comment: $ => /\/\/.*/,
 
-        _blankspace: $ => /[\u0020\u0009\u000a\u000b\u000c\u000d\u0085\u200e\u200f\u2028\u2029]/u
+        _blankspace: $ => /[\u0020\u0009\u000a\u000b\u000c\u000d\u0085\u200e\u200f\u2028\u2029]/u,
+
+        reserved: $ => choice('NULL', 'Self', 'abstract', 'active', 'alignas', 'alignof', 'as', 'asm', 'asm_fragment', 'async', 'attribute', 'auto', 'await', 'become', 'cast', 'catch', 'class', 'co_await', 'co_return', 'co_yield', 'coherent', 'column_major', 'common', 'compile', 'compile_fragment', 'concept', 'const_cast', 'consteval', 'constexpr', 'constinit', 'crate', 'debugger', 'decltype', 'delete', 'demote', 'demote_to_helper', 'do', 'dynamic_cast', 'enum', 'explicit', 'export', 'extends', 'extern', 'external', 'fallthrough', 'filter', 'final', 'finally', 'friend', 'from', 'fxgroup', 'get', 'goto', 'groupshared', 'highp', 'impl', 'implements', 'import', 'inline', 'instanceof', 'interface', 'layout', 'lowp', 'macro', 'macro_rules', 'match', 'mediump', 'meta', 'mod', 'module', 'move', 'mut', 'mutable', 'namespace', 'new', 'nil', 'noexcept', 'noinline', 'nointerpolation', 'non_coherent', 'noncoherent', 'noperspective', 'null', 'nullptr', 'of', 'operator', 'package', 'packoffset', 'partition', 'pass', 'patch', 'pixelfragment', 'precise', 'precision', 'premerge', 'priv', 'protected', 'pub', 'public', 'readonly', 'ref', 'regardless', 'register', 'reinterpret_cast', 'require', 'resource', 'restrict', 'self', 'set', 'shared', 'sizeof', 'smooth', 'snorm', 'static', 'static_assert', 'static_cast', 'std', 'subroutine', 'super', 'target', 'template', 'this', 'thread_local', 'throw', 'trait', 'try', 'type', 'typedef', 'typeid', 'typename', 'typeof', 'union', 'unless', 'unorm', 'unsafe', 'unsized', 'use', 'using', 'varying', 'virtual', 'volatile', 'wgsl', 'where', 'with', 'writeonly', 'yield'),
     }
 })

@@ -65,3 +65,4 @@ setup.py
 bindings/
 src/*
 !src/scanner.c
+!src/grammar.json

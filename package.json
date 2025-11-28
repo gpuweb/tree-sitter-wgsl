@@ -52,6 +52,9 @@
       ],
       "injection-regex": "^wgsl$",
       "highlights": "queries/highlights.scm"
+      "locals": "queries/locals.scm",
+      "folds": "queries/folds.scm",
+      "indents": "queries/indents/scm"
     }
   ]
 }
