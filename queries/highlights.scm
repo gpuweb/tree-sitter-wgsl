@@ -5,7 +5,7 @@
 
 (int_literal) @number
 
-(float_literal) @number
+(float_literal) @number.float
 
 (line_comment) @comment
 
@@ -29,15 +29,15 @@
 
 (diagnostic_rule_name) @module
 
-(member_ident) @property
+(member_ident) @variable.member
 
-(component_or_swizzle_specifier) @property
+(component_or_swizzle_specifier) @variable.member
 
 (function_header
   (ident) @function)
 
 (param
-  (ident)) @parameter
+  (ident)) @variable.parameter
 
 (call_expression
   (call_phrase
@@ -52,22 +52,31 @@
 (attribute) @attribute
 
 [
-  "alias"
   "const"
   "const_assert"
-  "diagnostic"
-  "discard"
-  "enable"
-  "fn"
   "let"
   "override"
-  "requires"
-  "return"
-  "struct"
   "var"
 ] @keyword
 
-; Loop constructs
+[
+  "alias"
+  "struct"
+] @keyword.type
+
+[
+  "discard"
+  "return"
+] @keyword.return
+
+"fn" @keyword.function
+
+[
+  "diagnostic"
+  "enable"
+  "requires"
+] @keyword.directive
+
 [
   "loop"
   "for"
@@ -75,16 +84,15 @@
   "continuing"
   (break_statement)
   (continue_statement)
-] @repeat
+] @keyword.repeat
 
-; Conditionals
 [
   "if"
   "else"
   "switch"
   "case"
   "default"
-] @conditional
+] @keyword.conditional
 
 [
   "+"
@@ -122,12 +130,13 @@
   "]"
   "{"
   "}"
-  (template_args_start)
-  (template_args_end)
 ] @punctuation.bracket
 
-((ident) @storageclass
-  (#match? @storageclass "^(function|private|workgroup|uniform|storage|handle)$"))
+[
+  (template_args_start)
+  (template_args_end)
+] @punctuation.special
 
-((ident) @type.qualifier
-  (#match? @type.qualifier "^(read|write|read_write)$"))
+((ident) @keyword.modifier
+  (#match? @keyword.modifier
+    "^(function|private|workgroup|uniform|storage|read|write|read_write)$"))
